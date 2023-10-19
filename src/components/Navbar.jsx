@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react';
-
+import debounce from 'lodash.debounce';
 import Img from "/src/assets/Img.png"
 const menuItems = [
   {
@@ -29,8 +29,7 @@ const Navbar = ({imagesd,setImagesd}) => {
         }
 
         // const searchInput = useRef(null);
-        const [searchInput, setSearchInput] = useState([]);
-
+        const [searchInput, setSearchInput] = useState("trending");
         const [images, setImages] = useState([]);
         const [page, setPage] = useState(1);
         const [totalPages, setTotalPages] = useState(0);
@@ -42,33 +41,40 @@ const Navbar = ({imagesd,setImagesd}) => {
       if (searchInput) {
         setErrorMsg('');
         setLoading(true);
-        const { data } = await axios.get(
-          `${API_URL}?query=${
-            searchInput
-          }&page=${page}&per_page=${IMAGES_PER_PAGE}&client_id=${
-            import.meta.env.VITE_API_KEY
-          }`
-        );
-        setImagesd(data.results);
-        setImages(data.results);
-        console.log(data.results); 
-        setImagesd(data.results);
-        setTotalPages(data.total_pages);
-        setLoading(false); 
+        // const { data } = await axios.get(
+        //   `${API_URL}?query=${
+        //     searchInput
+        //   }&page=${page}&per_page=${IMAGES_PER_PAGE}&client_id=${
+        //     import.meta.env.VITE_API_KEY
+        //   }`
+        // );
+        console.log(searchInput+"DFDf");
+        const data = await fetch(
+            `${API_URL}?query=${
+              searchInput
+            }&page=${page}&per_page=${IMAGES_PER_PAGE}&client_id=${
+              import.meta.env.VITE_API_KEY
+            }`)
+        const details = await data.json();
+        setImages(details.results);
+        setImagesd(details.results);
+        console.log(details.results);
+        
+        setSearchInput("");
+        // setTotalPages(data.total_pages);
+        // setLoading(false);
       }
     } catch (error) {
       setErrorMsg('Error fetching images. Try again later.');
       console.log(error);
       setLoading(false);
     }
-  }, [page]);
+  }, [page,searchInput]);
 
   
   useEffect(() => {
     fetchImages();
   }, [fetchImages]);
-
-  
 
   const resetSearch = () => {
     console.log(searchInput)
@@ -76,23 +82,20 @@ const Navbar = ({imagesd,setImagesd}) => {
     fetchImages();
   }; 
 
-  const handleSearch = () => {
+//   const handleSearch = () => {
    
-    resetSearch();
-  };
+//     resetSearch();
+//   };
   
-  useEffect(() => {
-    let getData = setTimeout(() => {
-        handleSearch();
-      }, 2000)
-   return () => clearTimeout(getData)
-  }, [searchInput]);
+
 
 
 //   const handleSelection = (selection) => {
 //     searchInput.current.value = selection;
 //     resetSearch();
 //   };
+  const updateQuery = e =>  setSearchInput(e?.target?.value);
+  const debounceOnChange  = debounce(updateQuery,1000);
 
   return (
     <>
@@ -106,15 +109,15 @@ const Navbar = ({imagesd,setImagesd}) => {
         <div className="flex grow   justify-end">
         {errorMsg && <p className='error-msg'>{errorMsg}</p>}
 
-          <form className='w-[90%] lg:w-[40%]'>
+          
           <input
-            className="flex w-[90%]  lg:w-[100%] h-10 rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex ml-8 w-[80%] h-10 rounded-md bg-gray-100 px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
             type='search'
             placeholder='Type something to search...'
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={debounceOnChange}
             
           ></input>
-           </form>
+         
 
            <div className="hidden w-[50%]  lg:block ">
           <ul className="ml-12 inline-flex space-x-8  pt-2">
