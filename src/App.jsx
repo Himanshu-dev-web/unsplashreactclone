@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Imagescard from './components/Imagescard';
 

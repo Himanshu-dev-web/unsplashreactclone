@@ -20,7 +20,7 @@ const menuItems = [
 ]
 
 const API_URL = 'https://api.unsplash.com/search/photos';
-const IMAGES_PER_PAGE = 20;
+const IMAGES_PER_PAGE = 30;
 
 const Navbar = ({imagesd,setImagesd}) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false)
@@ -30,6 +30,8 @@ const Navbar = ({imagesd,setImagesd}) => {
         const [searchInput, setSearchInput] = useState("trending");
         const [page, setPage] = useState(1);
         const [errorMsg, setErrorMsg] = useState('');
+        const [images, setImages] = useState([]);
+
     
   const fetchImages = useCallback(async () => {
     try {
@@ -43,8 +45,10 @@ const Navbar = ({imagesd,setImagesd}) => {
               import.meta.env.VITE_API_KEY
             }`)
         const details = await data.json();
-        setImagesd(details.results);
         console.log(details.results);
+        setImagesd(details.results);
+        setImages(details.results);
+        
         setSearchInput("");
               }
     } catch (error) {
@@ -90,11 +94,14 @@ const Navbar = ({imagesd,setImagesd}) => {
           </ul>
         </div>
         </div>
+       
         <div className="ml-2 mt-2 hidden lg:block">
         </div>
+        
         <div className="ml-2 lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
         </div>
+        
         {isMenuOpen && (
           <div className="absolute inset-x-0 top-0 z-50 origin-top-right transform p-2 transition lg:hidden">
             <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
@@ -138,13 +145,8 @@ const Navbar = ({imagesd,setImagesd}) => {
               </div>
             </div>
           </div>
-        )}
-
-
-        
+        )} 
       </div>
-      
-
     </div>
     </>
   )
