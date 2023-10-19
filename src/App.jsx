@@ -6,12 +6,12 @@ import Imagescard from './components/Imagescard';
 
 function App() {
 
-  const [imagesd, setImagesd] = useState([]);
+  const [images, setImages] = useState([]);
 
   return (
     <div className=''>
-        <Navbar imagesd={imagesd} setImagesd={setImagesd}/>
-        <Imagescard imagesd={imagesd} />
+        <Navbar images={images} setImages={setImages}/>
+        <Imagescard images={images} />
     </div>
   );
 }
