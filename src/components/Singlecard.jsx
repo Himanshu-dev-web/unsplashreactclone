@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaRegThumbsUp } from "react-icons/fa";
-import Modal from "./Modal";
 
 const Singlecard = ({ image }) => {
   const [showModal, setShowModal] = useState(false);

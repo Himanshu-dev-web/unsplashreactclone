@@ -37,7 +37,7 @@ const Navbar = ({imagesd,setImagesd}) => {
     try {
       if (searchInput) {
         setErrorMsg('');
-        console.log(searchInput+"DFDf");
+        
         const data = await fetch(
             `${API_URL}?query=${
               searchInput
@@ -56,6 +56,7 @@ const Navbar = ({imagesd,setImagesd}) => {
       console.log(error);
     }
   }, [page,searchInput]);
+  
   useEffect(() => {
     fetchImages();
   }, [fetchImages]);
